@@ -26,9 +26,6 @@ var ngc float64 = 6.67e-11
 var Ngc = big.NewFloat(6.67e-11)
 
 func (planet *Planet) calcEV() float64 {
-    fmt.Printf("Dividing mass & radius: %f\n", (planet.mass / planet.radius))
-    fmt.Printf("Multiple ngc with mr: %f\n", (ngc * 937058546539004928.000000))
-    fmt.Printf("GMR values: %f\n", (2 * 62501805.054152))
     gmr := 2 * 62501805.054152
     vms := math.Sqrt(gmr)
     fmt.Printf("VMS value: %f\n", vms)

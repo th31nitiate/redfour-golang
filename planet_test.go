@@ -16,6 +16,13 @@ func TestEV(t *testing.T) {
     bMars := BigPlanet{"mars", big.NewFloat(6.39e23), big.NewFloat(3.4e6)}
     fmt.Printf("Nibiru escape velocity values: '%f' \n", bMars.calcBigEV())
 
+    t.Log("Running escape velocity tests for Moon")
+    bMoon := BigPlanet{"moon", big.NewFloat(7.35e22), big.NewFloat(1.738e6)}
+    fmt.Printf("moon escape velocity values: '%f' \n", bMoon.calcBigEV())
+
+    t.Log("Running escape velocity tests for Earth")
+    bEarth := BigPlanet{"earth", big.NewFloat(6.371e6), big.NewFloat(5.97e24)}
+    fmt.Printf("earth escape velocity values: '%f' \n", bEarth.calcBigEV())
 
     t.Log("Running escape velocity tests for Earth")
     earth := Planet{"earth", 6.371e6, 5.97e24}
