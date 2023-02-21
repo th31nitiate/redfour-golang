@@ -15,6 +15,11 @@ type BigPlanet struct {
     mass_kg *big.Float
 }
 
+type BigUnits struct {
+    unit string
+    value *big.Float
+    precision uint32
+}
 
 type Units struct {
     unit string
@@ -55,8 +60,8 @@ func (bPlanet *BigPlanet) calcBigEV() *big.Float {
     nmr := new(big.Float).Mul(Ngc, ms)
     gmr := new(big.Float).Mul(big.NewFloat(2), nmr)
     vkms := new(big.Float).Sqrt(gmr)
-    //vkms := Units{"to_km", alt2, 5} -- As you can see we are not calling converter yet
-    return new(big.Float).Quo(vkms, big.NewFloat(1000))
+    value := BigUnits{"to_km", vkms, 5} //-- As you can see we are not calling converter yet
+    return value.bConverter()
 }
 
 
@@ -80,6 +85,28 @@ func (units *Units) converter() float64 {
     }
     panic("Error unknown unit")
 }
+
+
+func (units *BigUnits) bConverter() *big.Float {
+    switch units.unit {
+        case "to_meters":
+            return new(big.Float).Mul(units.value, big.NewFloat(1000))
+        case "miles_to_ls":
+            return new(big.Float).Mul(units.value, big.NewFloat(5.36819e-6))
+        case "inches_to_ls":
+            return new(big.Float).Mul(units.value, big.NewFloat(8.472522095734715723e-11))
+        case "feet_to_ls":
+            return new(big.Float).Mul(units.value, big.NewFloat(1.016702651488166404e-9))
+        case "meters_to_ls":
+            return new(big.Float).Mul(units.value, big.NewFloat(3.335638620368e-9))
+        case "to_km":
+            return new(big.Float).Quo(units.value, big.NewFloat(1000))
+    }
+    panic("Error unknown unit")
+}
+
+
+
 
 func roundTo(n float64, decimals uint32) float64 {
     return math.Round(n * math.Pow(10, float64(decimals))) / math.Pow(10, float64(decimals))
