@@ -14,20 +14,20 @@ func TestEV(t *testing.T) {
     }
 
     t.Log("Running escape velocity tests for Planet X")
-    bNibiru := BigPlanet{"nibiru", big.NewFloat(4.0e22), big.NewFloat(6.21e6)}
+    bNibiru := BigPlanet{"nibiru", big.NewFloat(4.0e22), big.NewFloat(6.21e6), big.NewFloat(0.0)}
     if v := bNibiru.calcBigEV(); v != big.NewFloat(0.926962) {
         t.Errorf("Issue with escape velocity please check equation: '%f'", v)
     }
 
     t.Log("Running escape velocity tests for Mars")
-    bMars := BigPlanet{"mars", big.NewFloat(6.39e23), big.NewFloat(3.4e6)}
+    bMars := BigPlanet{"mars", big.NewFloat(6.39e23), big.NewFloat(3.4e6), big.NewFloat(0.0)}
     if v := bMars.calcBigEV(); v != big.NewFloat(5.007130) {
         t.Errorf("Issue with escape velocity please check equation: '%f'", v)
     }
 
 
     t.Log("Running escape velocity tests for Moon")
-    bMoon := BigPlanet{"moon", big.NewFloat(7.35e22), big.NewFloat(1.738e6)}
+    bMoon := BigPlanet{"moon", big.NewFloat(7.35e22), big.NewFloat(1.738e6), big.NewFloat(0.0)}
     if v := bMoon.calcBigEV(); v != big.NewFloat(2.375181) {
         t.Errorf("Issue with escape velocity please check equation: '%f'", v)
     }
@@ -44,3 +44,11 @@ func TestConverter(t *testing.T) {
 
 }
 
+func TestOrbitor(t *testing.T) {
+    t.Log("Running orbiter tests for a height of 100km")
+    value := BigPlanet{"mars", big.NewFloat(6.39e23), big.NewFloat(3.4e6), big.NewFloat(100.0)}
+    if v := value.calcBigOA(); v != big.NewFloat(0.005368) {
+        t.Errorf("Converter test value returned: '%f'", v)
+    }
+
+}
