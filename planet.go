@@ -1,70 +1,41 @@
 package planet
 
 import ("math/big";
-	"math"; "fmt")
+	"math";)
+
 
 type Planet struct {
     name string
-    radius float64
-    mass float64
-}
-
-type BigPlanet struct {
-    name string
-    radius_m *big.Float
     mass_kg *big.Float
+    radius_m *big.Float
     orbitor_height *big.Float
 }
 
-type BigUnits struct {
+type Units struct {
     unit string
     value *big.Float
     precision uint32
 }
 
-type Units struct {
-    unit string
-    value float64
-    precision uint32
-}
-
-var ngc float64 = 6.67e-11
 var Ngc = big.NewFloat(6.67e-11)
-
-func (planet *Planet) calcEV() float64 {
-    gmr := 2 * 62501805.054152
-    vms := math.Sqrt(gmr)
-    vkms := Units{"to_km", vms, 5}
-    return vkms.converter()
-}
-
-
-//func (planet *Planet) calcEV() float64 {
-//    gmr := 2 * ngc * planet.mass / planet.radius
-//    vms := math.Sqrt(gmr)
-//    vkms := Units{"to_km", vms, 5}
-//    return vms
-//}
-
-
 
 //Using new to define big floats in this funcation may
 //not be the best but since it give our desired results
 //We will keep for now then refactor later as required
-func (bPlanet *BigPlanet) calcBigEV() *big.Float {
+func (bPlanet *Planet) calcBigEV() *big.Float {
     radius_m, _ := bPlanet.radius_m.Float64()
     mass_kg, _ := bPlanet.mass_kg.Float64()
     f64Radius_m := big.NewFloat(radius_m)          
     f64Mass_kg := big.NewFloat(mass_kg)
-    ms := new(big.Float).Quo(f64Radius_m, f64Mass_kg)
+    ms := new(big.Float).Quo(f64Mass_kg, f64Radius_m)
     nmr := new(big.Float).Mul(Ngc, ms)
     gmr := new(big.Float).Mul(big.NewFloat(2), nmr)
     vkms := new(big.Float).Sqrt(gmr)
-    value := BigUnits{"to_km", vkms, 5} //-- As you can see we are not calling converter yet
+    value := Units{"to_km", vkms, 5} //-- As you can see we are not calling converter yet
     return value.bConverter()
 }
 
-func (bPlanet *BigPlanet) calcBigOS() *big.Float {
+func (bPlanet *Planet) calcBigOS() *big.Float {
     mass_kg, _ := bPlanet.mass_kg.Float64()
     OrbRadius := bPlanet.calcBigOR()
     f64Mass_kg := big.NewFloat(mass_kg)
@@ -74,7 +45,7 @@ func (bPlanet *BigPlanet) calcBigOS() *big.Float {
     return vkms
 }
 
-func (bPlanet *BigPlanet) calcBigOA() *big.Float {
+func (bPlanet *Planet) calcBigOA() *big.Float {
     OrbRadius := bPlanet.calcBigOR()
     OrbSpeed := bPlanet.calcBigOS()
     //f64Mass_kg := new(big.Float).Mul(Ngc, ms)
@@ -85,35 +56,15 @@ func (bPlanet *BigPlanet) calcBigOA() *big.Float {
 }
 
 
-func (bPlanet *BigPlanet) calcBigOR() *big.Float {
+func (bPlanet *Planet) calcBigOR() *big.Float {
     radius_m, _ := bPlanet.radius_m.Float64()
     orbitor_height, _ := bPlanet.orbitor_height.Float64()
-    newOrbit := BigUnits{"to_meters", big.NewFloat(orbitor_height), 5}
+    newOrbit := Units{"to_meters", big.NewFloat(orbitor_height), 5}
     OrbRadius_m := new(big.Float).Add(big.NewFloat(radius_m), newOrbit.bConverter())
     return OrbRadius_m
 }
 
-// Need to configure function to use big numbers
-func (units *Units) converter() float64 {
-    switch units.unit {
-        case "to_meters":
-            return units.value * 1000
-        case "to_km":
-            return units.value / 1000
-        case "miles_to_ls":
-            return units.value * 5.36819e-6
-        case "inches_to_ls":
-            return units.value * 8.472522095734715723e-11
-        case "feet_to_ls":
-            return units.value * 1.016702651488166404e-9
-        case "meters_to_ls":
-            return units.value * 3.335638620368e-9
-    }
-    panic("Error unknown unit")
-}
-
-
-func (units *BigUnits) bConverter() *big.Float {
+func (units *Units) bConverter() *big.Float {
     switch units.unit {
         case "to_meters":
             return new(big.Float).Mul(units.value, big.NewFloat(1000))
